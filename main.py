@@ -16,37 +16,28 @@ def param_input():
     return capital, portion_capital, stop_loss
 
 
-def gest_risk_bolsa(cap: float):
-    """Function to stocks risks management.
+def risk_management(cap: float, market: str):
+    """Function to risk management
 
     Args:
         cap (float): Capital to manage.
-
-    Returns:
-        _type_: _description_
+        market (str): Market selected to risk management.
     """
-    percentage_capital = CAPITAL_PORT_BOLSA/100
-    stop_distance = SL_BOLSA/100
+    if market == 'bolsa':
+        percentage_capital = CAPITAL_PORT_BOLSA/100
+        stop_distance = SL_BOLSA/100
+    elif market == 'crypto':
+        percentage_capital = CAPITAL_PORT_CRYPTO/100
+        stop_distance = SL_CRYPTO/100
+    else:
+        print('Error with selected market')
+        exit(1)
     cap_x_op = cap*percentage_capital
     risk_x_op = cap_x_op*stop_distance
     perc_risk_op = (risk_x_op*100)/cap
     total_op = cap/risk_x_op
     print_result(cap_x_op, risk_x_op, perc_risk_op, total_op)
-
-
-def gest_risk_crypto(cap: float):
-    """Function to crypto risks management.
-
-    Args:
-        cap (float): Capital to manage.
-    """
-    percentage_capital = CAPITAL_PORT_CRYPTO/100
-    stop_distance = SL_CRYPTO/100
-    cap_x_op = cap*percentage_capital
-    risk_x_op = cap_x_op*stop_distance
-    perc_risk_op = (risk_x_op*100)/cap
-    total_op = cap/risk_x_op
-    print_result(cap_x_op, risk_x_op, perc_risk_op, total_op)
+    print(f'Parametros usados - %Capital: {percentage_capital*100}  SL: {stop_distance*100}')
 
 
 def print_result(capital_x_operation, risk_x_operation, percentage_risk_op, total_op):
@@ -70,12 +61,11 @@ def main():
         print_result(capital_x_operation, risk_x_operation, percentage_risk_op, total_op)
     else:
         fix = input('Es para bolsa (b) o cryptos (c)? (b/c): ')
+        capital = float(input("Inserte capital total de la cuenta (€): "))
         if fix == 'b':
-            capital = float(input("Inserte capital total de la cuenta (€): "))
-            gest_risk_bolsa(capital)
+            risk_management(capital, 'bolsa')
         elif fix == 'c':
-            capital = float(input("Inserte capital total de la cuenta (€): "))
-            gest_risk_crypto(capital)
+            risk_management(capital, 'crypto')
         else:
             print('Introduzca correctamente el parametro. (b/c)')
 
